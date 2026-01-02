@@ -251,31 +251,7 @@ app.listen(3000, () => console.log('Server running on port 3000'));
 
 ### Scalability Roadmap: From 1K to 10K Users
 
-#### Phase 1: Database Migration (1K-3K Users)
-**Timeline**: 1-2 weeks
-**Impact**: Eliminates file storage limitations
-
-```javascript
-// Migration to PostgreSQL
-class DatabaseStorageService {
-  async saveGoal(goalData) {
-    const query = `
-      INSERT INTO goals (user_id, input, refined_goal, key_results, confidence_score)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *;
-    `;
-    return await pool.query(query, [goalData.userId, goalData.input, ...]);
-  }
-}
-```
-
-**Benefits**:
-- ✅ ACID transactions
-- ✅ Concurrent access handling
-- ✅ Query capabilities (indexes, joins)
-- ✅ Backup/restore tools
-
-#### Phase 2: Caching Layer (3K-5K Users)
+#### Phase 1: Caching Layer (1K-3K Users)
 **Timeline**: 1 week
 **Impact**: Reduces database load, improves response times
 
@@ -301,7 +277,7 @@ class CachedGoalService {
 - ✅ Reduced database load
 - ✅ Better user experience
 
-#### Phase 3: Load Balancing (5K-10K Users)
+#### Phase 2: Load Balancing (3K-5K Users)
 **Timeline**: 2-3 weeks
 **Impact**: Horizontal scaling, improved reliability
 
@@ -330,7 +306,7 @@ services:
 - ✅ Zero-downtime deployments
 - ✅ Improved fault tolerance
 
-#### Phase 4: Microservices Architecture (10K+ Users)
+#### Phase 3: Microservices Architecture (5K-10K Users)
 **Timeline**: 4-6 weeks
 **Impact**: Independent scaling, specialized services
 
@@ -358,8 +334,8 @@ services:
 
 | Metric | Current (1K users) | Phase 1 (3K users) | Phase 2 (5K users) | Phase 3 (10K users) |
 |--------|-------------------|-------------------|-------------------|-------------------|
-| Avg Response Time | 250ms | 280ms | 220ms | 200ms |
-| Database Queries/sec | 10 | 45 | 40 | 35 |
+| Avg Response Time | 250ms | 220ms | 200ms | 180ms |
+| Database Queries/sec | 10 | 40 | 35 | 30 |
 | Memory Usage | 128MB | 256MB | 512MB | 1GB |
 | Monthly Cost | $50 | $150 | $300 | $600 |
 | Uptime Target | 99% | 99.5% | 99.9% | 99.95% |
