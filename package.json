@@ -1,0 +1,26 @@
+{
+  "name": "ai-goal-coach",
+  "version": "1.0.0",
+  "description": "AI-Assisted Goal Refinement & Coaching Application",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "python test_evals.py",
+    "test:node": "node test_evals.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "zod": "^4.3.4"
+  },
+  "devDependencies": {
+    "axios": "^1.6.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

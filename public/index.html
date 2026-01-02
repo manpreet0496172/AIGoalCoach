@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Goal Coach - Refine Your Goals with AI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎯 AI Goal Coach</h1>
+            <p class="subtitle">Transform vague goals into actionable SMART goals using AI</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Panel: Goal Input and Refinement -->
+            <section class="panel input-panel">
+                <h2>Step 1: Enter Your Goal</h2>
+                <div class="form-group">
+                    <label for="goalInput">What's your goal?</label>
+                    <textarea 
+                        id="goalInput" 
+                        placeholder="e.g., 'I want to get better at sales' or 'I want to learn programming'"
+                        rows="4"
+                        maxlength="500"
+                    ></textarea>
+                    <small class="char-count"><span id="charCount">0</span>/500</small>
+                </div>
+
+                <button id="refineBtn" class="btn btn-primary">Refine Goal with AI</button>
+                <div id="loadingIndicator" class="loading hidden">
+                    <span class="spinner"></span> Refining your goal...
+                </div>
+
+                <div id="errorMessage" class="error-message hidden"></div>
+
+                <!-- Refined Goal Display -->
+                <div id="refinedGoalSection" class="refinement-result hidden">
+                    <h2>Step 2: Your Refined Goal</h2>
+                    
+                    <!-- Confidence Score -->
+                    <div class="confidence-section">
+                        <label>AI Confidence</label>
+                        <div class="confidence-bar">
+                            <div id="confidenceBar" class="confidence-fill"></div>
+                        </div>
+                        <p id="confidenceText" class="confidence-text"></p>
+                    </div>
+
+                    <!-- SMART Goal -->
+                    <div class="goal-section">
+                        <h3>Your SMART Goal:</h3>
+                        <p id="refinedGoal" class="refined-goal-text"></p>
+                    </div>
+
+                    <!-- Key Results -->
+                    <div class="results-section">
+                        <h3>Key Results (Milestones):</h3>
+                        <ol id="keyResultsList" class="key-results-list"></ol>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="saveGoalBtn" class="btn btn-success">💾 Save Goal</button>
+                        <button id="refineAgainBtn" class="btn btn-secondary">🔄 Refine Again</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Saved Goals List -->
+            <section class="panel goals-panel">
+                <h2>Your Saved Goals</h2>
+                <div id="goalsList" class="goals-list-container">
+                    <p class="empty-state">No goals saved yet. Refine and save your first goal!</p>
+                </div>
+
+                <!-- Telemetry Summary -->
+                <div class="telemetry-section">
+                    <h3>📊 AI Usage Stats</h3>
+                    <div id="telemetryStats" class="telemetry-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Refinements:</span>
+                            <span class="stat-value" id="totalCalls">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Success Rate:</span>
+                            <span class="stat-value" id="successRate">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg Response:</span>
+                            <span class="stat-value" id="avgLatency">0ms</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Est. Cost:</span>
+                            <span class="stat-value" id="totalCost">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>AI Goal Coach • Powered by Google Gemini API • Built with Express.js</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
