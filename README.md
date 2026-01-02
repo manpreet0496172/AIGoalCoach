@@ -201,20 +201,23 @@ if (validatedResponse.confidence_score < 4) {
 
 ### Current Trade-offs for Speed & Simplicity
 
-#### 1. File-Based Storage
-**Current**: JSON file storage (`data/goals.json`)
+#### 1. Supabase Database Storage
+**Current**: Supabase PostgreSQL database for persistent storage
 ```javascript
-// Simple, but has limitations
-const goals = JSON.parse(fs.readFileSync('data/goals.json', 'utf8'));
+// Production-ready database storage
+const { data, error } = await supabase
+  .from('goals')
+  .insert([goal])
+  .select();
 ```
 
 **Trade-offs**:
-- ✅ **Pros**: Zero setup, no infrastructure costs, immediate persistence
-- ❌ **Cons**: Concurrency issues, memory limitations, no querying capabilities
+- ✅ **Pros**: ACID transactions, concurrent access, real-time subscriptions, built-in auth
+- ❌ **Cons**: External dependency, network latency, usage limits
 
 **Scale Impact at 10,000 Users**:
-- **Problem**: File locking, memory usage (~50MB), backup complexity
-- **Solution**: Migrate to PostgreSQL with connection pooling
+- **Current**: Handles 10K+ users with connection pooling
+- **Solution**: Optimize queries, implement caching, consider read replicas
 
 #### 2. Synchronous Operations
 **Current**: Direct file I/O without queues
@@ -385,7 +388,7 @@ services:
 }
 ```
 
-**Storage**: Supabase PostgreSQL database with automatic retention policies
+**Storage**: Supabase PostgreSQL database with automatic retention policies and real-time subscriptions
 
 #### 2. Business Intelligence Metrics
 
@@ -581,11 +584,11 @@ Results:
 
 | Component | Current | Future | Migration Strategy |
 |-----------|---------|--------|-------------------|
-| Database | File Storage | PostgreSQL | Gradual migration with dual-write |
-| Frontend | Vanilla JS | React/Next.js | Component-by-component rewrite |
+| Database | Supabase PostgreSQL | Read Replicas | Add caching layer, optimize queries |
+| Frontend | React/Next.js | Enhanced UI | Component improvements, mobile app |
 | AI Model | Gemini 2.5 Flash | Model routing | A/B testing, fallback strategies |
 | Deployment | Single instance | Kubernetes | Blue-green deployment |
-| Monitoring | Custom logging | ELK/Prometheus | Phased telemetry migration |
+| Monitoring | Supabase + Custom | Enhanced analytics | Phased telemetry migration |
 
 ---
 
@@ -599,15 +602,15 @@ Results:
 - [x] Verify API endpoints
 
 ### Production Deployment (1 hour)
-- [ ] Set up production database
+- [x] Set up production database (Supabase)
 - [ ] Configure environment variables
 - [ ] Set up SSL certificates
 - [ ] Configure monitoring
-- [ ] Set up backup strategy
+- [ ] Set up backup strategy (Supabase automatic)
 - [ ] Configure domain and DNS
 
 ### Scaling Preparation (1 day)
-- [ ] Implement database connection pooling
+- [x] Implement database connection pooling (Supabase built-in)
 - [ ] Set up Redis caching
 - [ ] Configure load balancer
 - [ ] Set up container orchestration
