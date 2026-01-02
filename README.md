@@ -633,26 +633,6 @@ All major architectural decisions must be documented in ADRs (Architecture Decis
 - Issue tracking: GitHub Issues
 - Emergency contact: DevOps team
 
----
-
-## 📄 License & Legal
-
-### License
-MIT License - Full commercial and personal use permitted
-
-### Data Privacy
-- GDPR compliant design
-- No data selling or sharing
-- User data ownership
-- Right to data deletion
-
-### AI Usage Terms
-- Google Gemini API terms apply
-- No user data used for AI training
-- Compliance with AI ethics guidelines
-
----
-
 ## 🎯 Conclusion
 
 AI Goal Coach represents a production-ready implementation of modern AI application architecture, demonstrating:
@@ -669,6 +649,194 @@ The architecture successfully balances development speed with production readine
 
 ---
 
-*Last Updated: January 2024*
+## 📡 API Endpoints Reference
+
+### Goal Management Endpoints
+
+#### POST /api/goals/refine
+**Purpose**: Refine a vague goal into structured SMART goal using AI
+```bash
+curl -X POST http://localhost:3000/api/goals/refine \
+  -H "Content-Type: application/json" \
+  -d '{"goal": "I want to get better at sales"}'
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "refined_goal": "Increase my sales conversion rate by 25% within the next 6 months by completing advanced sales training and implementing a structured follow-up system",
+    "key_results": [
+      "Complete advanced sales training course within 2 months",
+      "Implement structured follow-up system for all leads within 3 months",
+      "Achieve 25% increase in conversion rate by month 6"
+    ],
+    "confidence_score": 9
+  }
+}
+```
+
+#### POST /api/goals
+**Purpose**: Save a refined goal to database
+```bash
+curl -X POST http://localhost:3000/api/goals \
+  -H "Content-Type: application/json" \
+  -d {
+    "userInput": "I want to get better at sales",
+    "refined_goal": "Increase my sales conversion rate by 25%...",
+    "key_results": ["Complete advanced sales training..."],
+    "confidence_score": 9
+  }
+```
+
+#### GET /api/goals
+**Purpose**: Retrieve all saved goals
+```bash
+curl http://localhost:3000/api/goals
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "123",
+      "original_input": "I want to get better at sales",
+      "refined_goal": "Increase my sales conversion rate...",
+      "key_results": [...],
+      "confidence_score": 9,
+      "created_at": "2024-01-01T12:00:00.000Z"
+    }
+  ],
+  "count": 1
+}
+```
+
+#### GET /api/goals/:id
+**Purpose**: Retrieve specific goal by ID
+```bash
+curl http://localhost:3000/api/goals/123
+```
+
+#### DELETE /api/goals/:id
+**Purpose**: Delete a specific goal
+```bash
+curl -X DELETE http://localhost:3000/api/goals/123
+```
+
+### Telemetry Endpoints
+
+#### GET /api/telemetry
+**Purpose**: Get telemetry summary statistics
+```bash
+curl http://localhost:3000/api/telemetry
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "totalCalls": 150,
+    "successfulCalls": 148,
+    "failedCalls": 2,
+    "averageLatencyMs": 245,
+    "totalTokens": 45600,
+    "totalCost": "0.012345"
+  }
+}
+```
+
+#### GET /api/telemetry/logs
+**Purpose**: Get detailed AI call logs
+```bash
+# Get all logs
+curl http://localhost:3000/api/telemetry/logs
+
+# Get logs for specific date
+curl "http://localhost:3000/api/telemetry/logs?date=2024-01-01"
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "timestamp": "2024-01-01T12:00:00.000Z",
+      "model": "gemini-2.5-flash",
+      "success": true,
+      "latency_ms": 245,
+      "prompt_tokens": 150,
+      "completion_tokens": 250,
+      "total_tokens": 400,
+      "total_cost": 0.000086,
+      "input": "I want to get better at sales",
+      "output": {...},
+      "error_message": null
+    }
+  ],
+  "count": 1,
+  "dateFilter": "all"
+}
+```
+
+### System Endpoints
+
+#### GET /api/health
+**Purpose**: Health check and system status
+```bash
+curl http://localhost:3000/api/health
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "status": "healthy",
+  "timestamp": "2024-01-01T12:00:00.000Z"
+}
+```
+
+#### POST /api/eval/run-tests
+**Purpose**: Run automated test suite for evaluation
+```bash
+curl -X POST http://localhost:3000/api/eval/run-tests
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "output": "Running test suite...\n✓ Valid Goal - Sales: PASS\n✓ Valid Goal - Learning: PASS\n...",
+    "results": {...},
+    "timestamp": "2024-01-01T12:00:00.000Z"
+  }
+}
+```
+
+### Error Response Format
+
+All endpoints return consistent error responses:
+```json
+{
+  "success": false,
+  "error": "Error description message"
+}
+```
+
+### Rate Limits & Usage
+
+- **No authentication required** (development mode)
+- **Request size limit**: 10MB
+- **CORS enabled** for all origins (development)
+- **Retry logic**: Built-in 3 retries with 4-second delays for AI API calls
+
+---
+*Developed by: Manpreet Singh*
+*Last Updated: January 2026*
 *Architecture Version: 1.0*
 *Target Scale: 10,000 concurrent users*
